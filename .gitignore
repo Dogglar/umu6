@@ -1,4 +1,7 @@
 *.a
 *.o
 *.out
+*.so
 *~
+
+electrotest

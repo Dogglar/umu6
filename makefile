@@ -3,7 +3,7 @@ CLFLAGS:= -Wall -Werror -fPIC
 
 SRCS := $(wildcard *.c)
 OBJS := ${SRCS:c=o}
-EXEC_FILE:=testfile.o
+EXEC_FILE:=electrotest
 
 LOC := lib/
 VERSION:=1.0
