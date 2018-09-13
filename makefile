@@ -18,7 +18,7 @@ all : $(SRCS) $(EXEC_FILE) $(lib)
 lib : libpower.o libcomponent.o libresistance.o
 	gcc -shared libpower.o -o $(POW_FILE); \
 	gcc -shared libcomponent.o -o $(COM_FILE); \
-	gcc -shared libcomponent.o -o $(RES_FILE); \
+	gcc -shared libresistance.o -o $(RES_FILE); \
 	rm *.o
 
 $(EXEC_FILE) : $(OBJS)
