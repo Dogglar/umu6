@@ -1,5 +1,7 @@
 CC:=gcc
 CLFLAGS:= -Wall -Werror -fPIC
+ENDFLAGS:= -lm
+COMP:= $(CC) $(CLFLAGS)
 
 SRCS := $(wildcard *.c)
 OBJS := ${SRCS:c=o}
@@ -7,26 +9,28 @@ EXEC_FILE:=electrotest
 
 LOC := lib/
 VERSION:=1.0
-LIB_FILE:=$(LOC)/libpower.so.$(VERSION)
+POW_FILE:=$(LOC)/libpower.so.$(VERSION)
+COM_FILE:=$(LOC)/libcomponent.so.$(VERSION)
 
+all : $(SRCS) $(EXEC_FILE) $(lib)
 
-all : $(SRCS) $(EXEC_FILE) $(LIB_FILE)
-
-lib : $(LIB_FILE)
+lib : libpower.o libcomponent.o
+	gcc -shared libpower.o -o $(POW_FILE); \
+	gcc -shared libcomponent.o -o $(COM_FILE); \
 	rm *.o
 
 $(EXEC_FILE) : $(OBJS)
-	$(CC) $(CLFLAGS) $(OBJS) -o $(EXEC_FILE) ; \
-
-$(LIB_FILE) : libpower.o
-	gcc -shared libpower.o -o $(LIB_FILE)
-	#Här går det att lägga till rader för att generera fler bibliotek
+	$(COMP) $(OBJS) -o $(EXEC_FILE) $(ENDFLAGS); \
 
 install : $(LIB_FILE)
 
 main.o : main.c
 libpower.o : libpower.c libpower.h
+	$(COMP) -c libpower.c
+libcomponent.o : libcomponent.c libcomponent.h
+	$(COMP) -c libcomponent.c 
+
 
 .PHONY : clean
 clean :
-	-@rm -rf $(EXEC_FILE) $(OBJS) $(LIB_FILE) 
+	-@rm -rf $(EXEC_FILE) $(OBJS) $(COM_FILE) $(POW_FILE) 
