@@ -11,12 +11,14 @@ LOC := lib/
 VERSION:=1.0
 POW_FILE:=$(LOC)/libpower.so.$(VERSION)
 COM_FILE:=$(LOC)/libcomponent.so.$(VERSION)
+RES_FILE:=$(LOC)/libresistance.so.$(VERSION)
 
 all : $(SRCS) $(EXEC_FILE) $(lib)
 
-lib : libpower.o libcomponent.o
+lib : libpower.o libcomponent.o libresistance.o
 	gcc -shared libpower.o -o $(POW_FILE); \
 	gcc -shared libcomponent.o -o $(COM_FILE); \
+	gcc -shared libcomponent.o -o $(RES_FILE); \
 	rm *.o
 
 $(EXEC_FILE) : $(OBJS)
@@ -29,7 +31,8 @@ libpower.o : libpower.c libpower.h
 	$(COMP) -c libpower.c
 libcomponent.o : libcomponent.c libcomponent.h
 	$(COMP) -c libcomponent.c 
-
+libresistance.o: libresistance.c libresistance.h
+	$(COMP) -c libresistance.c 
 
 .PHONY : clean
 clean :
