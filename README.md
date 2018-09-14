@@ -12,10 +12,11 @@ libpower består av en c fil och en header fil. Dessa två används för att ska
 *libcomponent* består av en c fil och en header fil. Dessa två används för att skapa ett delat bibliotek. Biblioteket innehåller funktionalitet för att beräkna antal resistorer samt resistorvärden från E12 serien som krävs att ersätta resistansvärde givet av användaren.
 
 **Bibliotekets funktioner:**
+
 *int e_resistance( float orig_resistance, float \**res_array )*
-- orig\_resistance - ersättningsresistansen.
-- \*res\_array - pekare till en array med 3 resistorer som ska fyllas med värden ur E12-serien.
-- count - antalet resistorer ur E12-serien som behövdes för att ersätta orig\_resistance. 
+- orig\_resistance: ersättningsresistansen.
+- \*res\_array:  pekare till en array med 3 resistorer som ska fyllas med värden ur E12-serien.
+- returvärde: antalet resistorer ur E12-serien som behövdes för att ersätta orig\_resistance. 
 
 ## Kompilering och testning av libcomponent
 libcomponent använder sig av standard biblioteket **Math** (-lm) som bör länkas in på ställen där den används. Testning av biblioteket och kodens funktionalitet utfördes i branchen **"libcomponent"** som också innehåller ett färdigtkompilerat testprogram med source-koden. 
