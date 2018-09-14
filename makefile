@@ -13,7 +13,7 @@ POW_FILE:=$(LOC)/libpower.so.$(VERSION)
 COM_FILE:=$(LOC)/libcomponent.so.$(VERSION)
 RES_FILE:=$(LOC)/libresistance.so.$(VERSION)
 
-all : $(SRCS) $(EXEC_FILE) $(lib)
+all : $(SRCS) lib $(EXEC_FILE) 
 
 lib : libpower.o libcomponent.o libresistance.o
 	@if [ ! -d "./lib" ];\
@@ -24,10 +24,13 @@ lib : libpower.o libcomponent.o libresistance.o
 	gcc -shared libpower.o -o $(POW_FILE); \
 	gcc -shared libcomponent.o -o $(COM_FILE); \
 	gcc -shared libresistance.o -o $(RES_FILE); \
+	ln -s ./libpower.so.$(VERSION) ./lib/libpower.so	
+	ln -s ./libcomponent.so.$(VERSION) ./lib/libcomponent.so
+	ln -s ./libresistance.so.$(VERSION) ./lib/libresistance.so
 	rm *.o
 
-$(EXEC_FILE) : $(OBJS)
-	$(COMP) $(OBJS) -o $(EXEC_FILE) $(ENDFLAGS); \
+$(EXEC_FILE) : $(EXEC_FILE).c
+	$(CC) $(EXEC_FILE).c -o $(EXEC_FILE) -L./$(LOC) -lresistance -lcomponent -lpower  -Wl,-rpath,./$(LOC) $(ENDFLAGS); \
 
 install : $(LIB_FILE)
 
@@ -41,4 +44,4 @@ libresistance.o: libresistance.c libresistance.h
 
 .PHONY : clean
 clean :
-	-@rm -rf $(EXEC_FILE) $(OBJS) $(COM_FILE) $(POW_FILE) 
+	-@rm -rf $(EXEC_FILE) $(OBJS) $(COM_FILE) $(POW_FILE) ./$(LOC)

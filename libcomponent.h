@@ -1,3 +1,4 @@
+/**@file libcomponent.h*/
 #ifndef __LIBCOMPONENT_H__
 #define __LIBCOMPONENT_H__
 
