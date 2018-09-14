@@ -7,7 +7,7 @@ SRCS := $(wildcard *.c)
 OBJS := ${SRCS:c=o}
 EXEC_FILE:=electrotest
 
-LOC := lib/
+LOC := lib
 VERSION:=1.0
 POW_FILE:=$(LOC)/libpower.so.$(VERSION)
 COM_FILE:=$(LOC)/libcomponent.so.$(VERSION)
@@ -16,6 +16,11 @@ RES_FILE:=$(LOC)/libresistance.so.$(VERSION)
 all : $(SRCS) $(EXEC_FILE) $(lib)
 
 lib : libpower.o libcomponent.o libresistance.o
+	@if [ ! -d "./lib" ];\
+	then echo "lib directory does not exists\
+	and will be created";\
+	mkdir lib;\
+        fi	
 	gcc -shared libpower.o -o $(POW_FILE); \
 	gcc -shared libcomponent.o -o $(COM_FILE); \
 	gcc -shared libresistance.o -o $(RES_FILE); \
