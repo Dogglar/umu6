@@ -13,7 +13,7 @@ libpower består av en c fil och en header fil. Dessa två används för att ska
 
 **Bibliotekets funktioner:**
 
-*int e_resistance( float orig_resistance, float \**res_array )*
+*int e_resistance( float orig_resistance, float \*res\_array )*
 - orig\_resistance: ersättningsresistansen.
 - \*res\_array:  pekare till en array med 3 resistorer som ska fyllas med värden ur E12-serien.
 - returvärde: antalet resistorer ur E12-serien som behövdes för att ersätta orig\_resistance. 
