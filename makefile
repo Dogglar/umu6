@@ -8,7 +8,7 @@ OBJS := ${SRCS:c=o}
 EXEC_FILE:=electrotest
 
 LOC := lib/
-VERSION:=.1.0
+VERSION:=1.0
 POW_FILE:=$(LOC)libpower.so
 COM_FILE:=$(LOC)libcomponent.so
 RES_FILE:=$(LOC)libresistance.so
@@ -46,15 +46,17 @@ install :
 ifneq ($(shell whoami),root)
 	@echo "You must be root to install"
 else
-	cp -t /usr
-	cp -t /usr/bin/ $(EXEC_FILE)
+	cp $(POW_FILE) /usr/$(POW_FILE).$(VERSION)
+	cp $(COM_FILE) /usr/$(COM_FILE).$(VERSION)
+	cp $(RES_FILE) /usr/$(RES_FILE).$(VERSION)
+	cp $(EXEC_FILE) /usr/bin/
 endif
 
 uninstall :
 ifneq ($(shell whoami),root)
 	@echo "You must be root to uninstall"
 else
-	rm -f $(addprefix /usr/,$(LIB_FILES))
+	rm -f $(addsuffix .$(VERSION),$(addprefix /usr/,$(LIB_FILES)))
 	rm -f /usr/bin/$(EXEC_FILE)
 endif
 
