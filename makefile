@@ -9,19 +9,17 @@ EXEC_FILE:=electrotest
 
 LOC := lib/
 VERSION:=1.0
-POW_FILE:=$(LOC)libpower.so
-COM_FILE:=$(LOC)libcomponent.so
-RES_FILE:=$(LOC)libresistance.so
+POW_FILE:=libpower.so.$(VERSION)
+COM_FILE:=libcomponent.so.$(VERSION)
+RES_FILE:=libresistance.so.$(VERSION)
 LIB_FILES:= $(POW_FILE) $(COM_FILE) $(RES_FILE)
 
 all : $(SRCS) lib $(EXEC_FILE) 
 
 lib : $(LOC) $(POW_FILE) $(COM_FILE) $(RES_FILE)
-	rm *.o
 
 $(EXEC_FILE) : $(EXEC_FILE).c
-	$(CC) $(EXEC_FILE).c -o $(EXEC_FILE) -L./$(LOC) -lresistance -lcomponent -lpower  -Wl,-rpath,./$(LOC) $(ENDFLAGS);
-
+	$(CC) -Wl,-rpath,./$(LOC) $(EXEC_FILE).c -o $(EXEC_FILE) -L./$(LOC) -l:$(POW_FILE) -l:$(RES_FILE) -l:$(COM_FILE) $(ENDFLAGS)
 libpower.o : libpower.c libpower.h
 	$(COMP) -c libpower.c
 libcomponent.o : libcomponent.c libcomponent.h
@@ -30,11 +28,11 @@ libresistance.o: libresistance.c libresistance.h
 	$(COMP) -c libresistance.c
 
 $(POW_FILE) : libpower.o
-	gcc -shared libpower.o -o $(POW_FILE)
+	gcc -shared -Wl,-soname,$(POW_FILE) -o $(LOC)$(POW_FILE) libpower.o
 $(COM_FILE) : libcomponent.o
-	gcc -shared libcomponent.o -o $(COM_FILE)
+	gcc -shared -Wl,-soname,$(COM_FILE) -o $(LOC)$(COM_FILE) libcomponent.o
 $(RES_FILE) : libresistance.o
-	gcc -shared libresistance.o -o $(RES_FILE)
+	gcc -shared -Wl,-soname,$(RES_FILE) -o $(LOC)$(RES_FILE) libresistance.o
 $(LOC) :
 	@if [ ! -d "./lib" ];\
 	then echo "lib directory does not exists\
@@ -46,9 +44,9 @@ install :
 ifneq ($(shell whoami),root)
 	@echo "You must be root to install"
 else
-	cp $(POW_FILE) /usr/$(POW_FILE).$(VERSION)
-	cp $(COM_FILE) /usr/$(COM_FILE).$(VERSION)
-	cp $(RES_FILE) /usr/$(RES_FILE).$(VERSION)
+	cp $(LOC)$(POW_FILE) /usr/lib/$(POW_FILE)
+	cp $(LOC)$(COM_FILE) /usr/lib/$(COM_FILE)
+	cp $(LOC)$(RES_FILE) /usr/lib/$(RES_FILE)
 	cp $(EXEC_FILE) /usr/bin/
 endif
 
@@ -56,7 +54,7 @@ uninstall :
 ifneq ($(shell whoami),root)
 	@echo "You must be root to uninstall"
 else
-	rm -f $(addsuffix .$(VERSION),$(addprefix /usr/,$(LIB_FILES)))
+	rm -f $(addprefix /usr/lib/,$(LIB_FILES))
 	rm -f /usr/bin/$(EXEC_FILE)
 endif
 
